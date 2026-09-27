@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "EZ-Template-Example",
+    "project_name": "Primary",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -424,9 +424,9 @@
       }
     },
     "upload_options": {
-      "description": "roboticsisez.com",
-      "slot": 2,
-      "icon": "clawbot"
+      "description": "Primary code",
+      "slot": 1,
+      "icon": "pros"
     },
     "use_early_access": false
   }
