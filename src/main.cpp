@@ -7,7 +7,7 @@
 
 // Chassis constructor
 ez::Drive chassis(
-    {16, -18, 1},     // Left Chassis Ports (negative port will reverse it!)
+    {16, -18, -2},     // Left Chassis Ports (negative port will reverse it!)
     {-17, 14, 13},  // Right Chassis Ports (negative port will reverse it!)
 
     6,      // IMU Port
@@ -23,6 +23,9 @@ void initialize() {
   ez::ez_template_print();
 
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
+
+  // Configure motors
+  clawArm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
   // chassis.odom_tracker_back_set(&horiz_tracker);
   chassis.odom_tracker_left_set(&vert_tracker);
