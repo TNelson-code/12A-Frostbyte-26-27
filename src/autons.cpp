@@ -378,5 +378,5 @@ void measure_offsets() {
 // . . .
 
 void test_auto1() {
-  //
+  
 }

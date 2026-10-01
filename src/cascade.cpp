@@ -27,6 +27,39 @@ void CascadeMove(int IntakeSpeed) {
     cascadeRight.move(IntakeSpeed);
 }
 
+// Placeholder targets, must stay within revMin..revMax
+double cascadeTargets[CASCADE_STATE_COUNT] = {0, 2.5, 5, 7.5, 10};
+
+bool CascadeMoveToState(CascadeState state, int timeoutMs) {
+    if (state < 0 || state >= CASCADE_STATE_COUNT) return false;
+
+    const double tolerance = 0.05; // revolutions
+    const double kP = 60;          // motor power per revolution of error
+    double target = std::fmin(std::fmax(cascadeTargets[state], revMin), revMax);
+    uint32_t start = pros::millis();
+
+    while (pros::millis() - start < (uint32_t)timeoutMs) {
+        double reading = _cascadeRevs();
+        if (!std::isfinite(reading)) break; // can't close the loop without a sensor
+
+        revolutions = reading;
+        double error = target - reading;
+        if (std::fabs(error) <= tolerance) {
+            CascadeMove(0);
+            return true;
+        }
+
+        double power = std::fmin(std::fmax(error * kP, -127), 127);
+        // Keep a minimum power so the motors don't stall near the target
+        if (std::fabs(power) < 25) power = power < 0 ? -25 : 25;
+        CascadeMove((int)power);
+        pros::delay(10);
+    }
+
+    CascadeMove(0);
+    return false;
+}
+
 void CascadeControl() {
     double reading = _cascadeRevs();
 

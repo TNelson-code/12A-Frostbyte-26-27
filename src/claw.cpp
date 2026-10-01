@@ -25,7 +25,7 @@ void ClawArmControl() {
   bool down = master.get_digital(DIGITAL_L2);
 
   if (std::isnan(pos)) { // No sensor: manual only, no limits or presets
-    clawArm.move(up == down ? 0 : (up ? 90 : -90));
+    clawArm.move(up == down ? 0 : (up ? 60 : -60));
     return;
   }
 
@@ -35,7 +35,7 @@ void ClawArmControl() {
 
   double out;
   if (up != down) {
-    out = up ? 90 : -90; // Up or down moving 90
+    out = up ? 60 : -60; // Up or down moving 90
     armTarget = std::clamp(pos, armMin, armMax); // Readjust pos
   } else {
     out = std::clamp((armTarget - pos) * armKp, -127.0, 127.0);
