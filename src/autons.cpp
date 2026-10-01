@@ -377,6 +377,38 @@ void measure_offsets() {
 // Make your own autonomous functions here!
 // . . .
 
-void test_auto1() {
+void red_right_1() {
+  // Center of field is 0, 0. 0 degrees faces other side of field.
+  chassis.odom_pose_set({-60_in, 0_in, -180_deg});
+  // Flip toggle to red
+  chassis.pid_odom_set({-65_in, 0_in, -180_deg}, true);
+  chassis.pid_wait();
+  chassis.pid_odom_set({-60_in, 0_in, -180_deg}, true);
+  chassis.pid_wait();
+  chassis.pid_odom_set({-65_in, 0_in, -180_deg}, true);
+  chassis.pid_wait();
+  chassis.pid_odom_set({-60_in, 0_in, -180_deg}, true);
+  chassis.pid_wait();
+
+  // Score preload
+  chassis.pid_odom_set({-57_in, -20_in, -90_deg}, true);
+  ClawArmMoveToState(CLAW_ARM_LOW, 2000);
+  chassis.pid_wait();
+  ClawContract(false);
+
+  // Drive and get stack
+  chassis.pid_odom_set({-57_in, -10_in, -45_deg}, true);  
+  chassis.pid_wait();
+  chassis.pid_odom_set({-20_in, -20_in, -45_deg}, true);
+  chassis.pid_wait();
+  ClawContract(true);
+  pros::delay(200);
+
+  // Score stack
+  CascadeMoveToState(CASCADE_STATE_1, 2000);
+  chassis.pid_odom_set({-46_in, -24_in, -180_deg}, true);
+  chassis.pid_wait();
+  ClawContract(false);
+
   
 }

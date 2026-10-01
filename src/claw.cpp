@@ -4,6 +4,7 @@ double armTarget = 0;
 const double armMin = 0;
 const double armMax = 270;
 const double armKp = 1; // Tuning
+const double armTolerance = 6; // degrees of slack around a target
 
 double _armPos() {
   int32_t raw = clawRot.get_angle();
@@ -16,7 +17,37 @@ double _armPos() {
 void ClawArmInit() {
   clawRot.set_data_rate(5); // 5 ms per reading
   double pos = _armPos();
-  armTarget = std::isnan(pos) ? 0 : std::clamp(pos, armMin, armMax);
+  // get_angle() is absolute and survives power cycles, so just hold wherever the arm is
+  armTarget = std::isnan(pos) ? 0 : pos;
+}
+
+// Must stay within armMin..armMax
+double clawArmTargets[CLAW_ARM_STATE_COUNT] = {0, 90, 270};
+
+bool ClawArmMoveToState(ClawArmState state, int timeoutMs) {
+  if (state < 0 || state >= CLAW_ARM_STATE_COUNT) return false;
+
+  const double tolerance = armTolerance;
+  double target = std::clamp(clawArmTargets[state], armMin, armMax);
+  uint32_t start = pros::millis();
+
+  while (pros::millis() - start < (uint32_t)timeoutMs) {
+    double pos = _armPos();
+    if (std::isnan(pos)) break; // can't close the loop without a sensor
+
+    double error = target - pos;
+    if (std::fabs(error) <= tolerance) {
+      armTarget = target; // hold here once control resumes
+      clawArm.move(0);
+      return true;
+    }
+
+    clawArm.move(std::clamp(error * armKp, -127.0, 127.0));
+    pros::delay(10);
+  }
+
+  clawArm.move(0);
+  return false;
 }
 
 void ClawArmControl() {
@@ -29,16 +60,17 @@ void ClawArmControl() {
     return;
   }
 
-  if (master.get_digital_new_press(DIGITAL_DOWN)) armTarget = 0;
-  if (master.get_digital_new_press(DIGITAL_LEFT)) armTarget = 90;
-  if (master.get_digital_new_press(DIGITAL_UP)) armTarget = 270;
+  if (master.get_digital_new_press(DIGITAL_DOWN)) armTarget = clawArmTargets[CLAW_ARM_DOWN];
+  if (master.get_digital_new_press(DIGITAL_LEFT)) armTarget = clawArmTargets[CLAW_ARM_HIGH];
+  if (master.get_digital_new_press(DIGITAL_UP)) armTarget = clawArmTargets[CLAW_ARM_LOW];
 
   double out;
   if (up != down) {
     out = up ? 60 : -60; // Up or down moving 90
     armTarget = std::clamp(pos, armMin, armMax); // Readjust pos
   } else {
-    out = std::clamp((armTarget - pos) * armKp, -127.0, 127.0);
+    double error = armTarget - pos;
+    out = std::fabs(error) <= armTolerance ? 0 : std::clamp(error * armKp, -127.0, 127.0);
   }
 
   if (pos <= armMin && out < 0) out = 0;
