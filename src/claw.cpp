@@ -5,19 +5,19 @@ const double armMin = 0;
 const double armMax = 270;
 const double armKp = 1; // Tuning
 
-double arm_pos() {
+double _armPos() {
   double a = clawRot.get_angle() / 100.0; // centridegrees to degrees
   if (a > 315) a -= 360;
   return a;
 }
 
-void arm_init() {
+void ClawArmInit() {
   clawRot.set_data_rate(5); // 5 ms per reading
-  armTarget = std::clamp(arm_pos(), armMin, armMax);
+  armTarget = std::clamp(_armPos(), armMin, armMax);
 }
 
 void ClawArmControl() {
-  double pos = arm_pos();
+  double pos = _armPos();
   bool up = master.get_digital(DIGITAL_L1);
   bool down = master.get_digital(DIGITAL_L2);
 

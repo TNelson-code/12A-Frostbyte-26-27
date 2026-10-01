@@ -11,4 +11,7 @@ inline pros::Rotation clawRot(11);
 
 void ClawContract(bool ClawState);
 void ClawMove(int speed);
+void ClawArmControl();
 void ClawControl();
+void ClawArmInit();
+double _armPos();

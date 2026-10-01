@@ -26,6 +26,8 @@ void initialize() {
 
   // Configure motors
   clawArm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+  ClawArmInit();
+  CascadeInit();
 
   // chassis.odom_tracker_back_set(&horiz_tracker);
   chassis.odom_tracker_left_set(&vert_tracker);
@@ -233,7 +235,8 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
 
-    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    //chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    chassis.opcontrol_tank();
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
 
     CascadeControl();                                // Cascade control
