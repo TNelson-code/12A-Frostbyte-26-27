@@ -38,12 +38,14 @@ void CascadeMoveToState(CascadeState state, int timeoutMs) {
 }
 
 void CascadeControl() {
+  // No sensor plugged in means no idea where the cascade is, so skip the limits
+  bool hasSensor = cascadeRot.is_installed();
   double revs = CascadeRevs();
 
-  if (master.get_digital(DIGITAL_R1) && revs < revMax) {
+  if (master.get_digital(DIGITAL_R1) && (!hasSensor || revs < revMax)) {
     CascadeMove(127);
   }
-  else if (master.get_digital(DIGITAL_R2) && revs > revMin) {
+  else if (master.get_digital(DIGITAL_R2) && (!hasSensor || revs > revMin)) {
     CascadeMove(-127);
   }
   else {

@@ -8,7 +8,7 @@
 // Chassis constructor
 ez::Drive chassis(
     {16, -18, -2},     // Left Chassis Ports (negative port will reverse it!)
-    {-17, 14, 13},  // Right Chassis Ports (negative port will reverse it!)
+    {17, 14, 13},  // Right Chassis Ports (negative port will reverse it!)
 
     1,      // IMU Port
     3.25,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -27,12 +27,13 @@ void initialize() {
   // Configure motors
   clawArm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
   CascadeInit();
+  ClawInit();
 
   // chassis.odom_tracker_back_set(&horiz_tracker);
   chassis.odom_tracker_left_set(&vert_tracker);
 
   // Configure your chassis controls
-  chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
+  chassis.opcontrol_curve_buttons_toggle(false);  // Off: curve buttons are LEFT/RIGHT/Y/A, which the arm and intake use. Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0.0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_curve_default_set(0.0, 0.0);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
 
@@ -177,7 +178,7 @@ pros::Task ezScreenTask(ez_screen_task);
 
 /**
  * Gives you some extras to run in your opcontrol:
- * - run your autonomous routine in opcontrol by pressing DOWN and B
+ * - run your autonomous routine in opcontrol by pressing A and RIGHT
  *   - to prevent this from accidentally happening at a competition, this
  *     is only enabled when you're not connected to competition control.
  * - gives you a GUI to change your PID values live by pressing X
@@ -192,11 +193,13 @@ void ez_template_extras() {
     //  When enabled:
     //  * use A and Y to increment / decrement the constants
     //  * use the arrow keys to navigate the constants
-    if (master.get_digital_new_press(DIGITAL_X))
-      chassis.pid_tuner_toggle();
+    // Disabled: X is the claw, and while the tuner is on it eats the arrow buttons (arm) and Y (intake)
+    // if (master.get_digital_new_press(DIGITAL_X))
+    //   chassis.pid_tuner_toggle();
 
     // Trigger the selected autonomous routine
-    if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
+    // A + RIGHT, since B + DOWN is intake out + arm down
+    if (master.get_digital(DIGITAL_A) && master.get_digital(DIGITAL_RIGHT)) {
       pros::motor_brake_mode_e_t preference = chassis.drive_brake_get();
       autonomous();
       chassis.drive_brake_set(preference);
@@ -273,6 +276,20 @@ void DebugPrint() {
   for (auto &m : chassis.left_motors) printf(" %.0fC/%dmA", m.get_temperature(), m.get_current_draw());
   printf(" | R");
   for (auto &m : chassis.right_motors) printf(" %.0fC/%dmA", m.get_temperature(), m.get_current_draw());
+
+  // 1 = the brain sees that button held. If you press a button and it stays 0, the press isn't reaching the brain.
+  printf(" | btn U%d D%d L%d X%d Y%d B%d L1%d L2%d R1%d R2%d | link %d bat %d%%",
+         master.get_digital(DIGITAL_UP), master.get_digital(DIGITAL_DOWN), master.get_digital(DIGITAL_LEFT),
+         master.get_digital(DIGITAL_X), master.get_digital(DIGITAL_Y), master.get_digital(DIGITAL_B),
+         master.get_digital(DIGITAL_L1), master.get_digital(DIGITAL_L2),
+         master.get_digital(DIGITAL_R1), master.get_digital(DIGITAL_R2),
+         master.is_connected(), master.get_battery_capacity());
+  // Joysticks: if these move when you push the sticks, the controller is talking to the brain
+  printf(" | sticks LY%d RY%d | partner link %d", master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_Y),
+         pros::Controller(pros::E_CONTROLLER_PARTNER).is_connected());
+  printf(" | arm %.0fC want %.1f motor pos %.1f -> %.1f", clawArm.get_temperature(), armTarget,
+         clawArm.get_position(), clawArm.get_target_position());
+  printf(" | cascade revs %.2f %dmA/%dmA", CascadeRevs(), cascadeLeft.get_current_draw(), cascadeRight.get_current_draw());
   printf("\n");
   worstLoop = 0;
 }

@@ -5,7 +5,7 @@ void IntakeMove(int speed) {
 }
 
 void IntakeControl() {
-  if (master.get_digital(DIGITAL_A)) {
+  if (master.get_digital(DIGITAL_Y)) {
     intake.move(127);
   }
   else if (master.get_digital(DIGITAL_B)) {
