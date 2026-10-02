@@ -1,24 +1,17 @@
 #include "main.h"
 
-
-void IntakeMove(int IntakeSpeed) {
-    intake.move(IntakeSpeed);
+void IntakeMove(int speed) {
+  intake.move(speed);
 }
 
 void IntakeControl() {
-    // If A is pressed, spin intake forwards
-    if (master.get_digital(DIGITAL_A)) {
-        IntakeMove(127);
-    } 
-
-    // If B is pressed, spin intake backwards
-    else if (master.get_digital(DIGITAL_B)) {
-        IntakeMove(-127);
-    }
-
-    // If no button is pressed, stop intake from spinning
-    else {
-        IntakeMove(0);
-    }
+  if (master.get_digital(DIGITAL_A)) {
+    intake.move(127);
+  }
+  else if (master.get_digital(DIGITAL_B)) {
+    intake.move(-127);
+  }
+  else {
+    intake.move(0);
+  }
 }
-

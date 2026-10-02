@@ -44,6 +44,7 @@
 #include "EZ-Template/api.hpp"
 
 // More includes here...
+#include "pid.hpp"
 #include "autons.hpp"
 #include "drivetrain.hpp"
 #include "intake.hpp"

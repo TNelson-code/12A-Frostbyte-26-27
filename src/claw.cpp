@@ -1,88 +1,78 @@
 #include "main.h"
 
+// Arm positions in rotation sensor degrees: down, high, low
+double clawArmTargets[CLAW_ARM_STATE_COUNT] = {360, 270, 88};
+
+MotorPID armPID = {1.5, 0, 0.5}; // kP, kI, kD
+double armTolerance = 20;
+
 double armTarget = 0;
-const double armMin = 0;
-const double armMax = 270;
-const double armKp = 1; // Tuning
-const double armTolerance = 6; // degrees of slack around a target
+bool armGoingToTarget = false;
 
-double _armPos() {
-  int32_t raw = clawRot.get_angle();
-  if (raw == PROS_ERR) return NAN; // Sensor unplugged
-  double a = raw / 100.0; // centridegrees to degrees
-  if (a > 315) a -= 360;
-  return a;
+double ArmAngle() {
+  double angle = clawRot.get_angle() / 100.0;
+  if (angle < 50) angle += 360; // sensor rolls over from 360 to 0, this keeps it going past 360
+  return angle;
 }
 
-void ClawArmInit() {
-  clawRot.set_data_rate(5); // 5 ms per reading
-  double pos = _armPos();
-  // get_angle() is absolute and survives power cycles, so just hold wherever the arm is
-  armTarget = std::isnan(pos) ? 0 : pos;
-}
+// Used in auton, waits until the arm gets there
+void ClawArmMoveToState(ClawArmState state, int timeoutMs) {
+  double target = clawArmTargets[state];
+  int start = pros::millis();
+  PIDReset(armPID);
 
-// Must stay within armMin..armMax
-double clawArmTargets[CLAW_ARM_STATE_COUNT] = {0, 90, 270};
-
-bool ClawArmMoveToState(ClawArmState state, int timeoutMs) {
-  if (state < 0 || state >= CLAW_ARM_STATE_COUNT) return false;
-
-  const double tolerance = armTolerance;
-  double target = std::clamp(clawArmTargets[state], armMin, armMax);
-  uint32_t start = pros::millis();
-
-  while (pros::millis() - start < (uint32_t)timeoutMs) {
-    double pos = _armPos();
-    if (std::isnan(pos)) break; // can't close the loop without a sensor
-
-    double error = target - pos;
-    if (std::fabs(error) <= tolerance) {
-      armTarget = target; // hold here once control resumes
-      clawArm.move(0);
-      return true;
-    }
-
-    clawArm.move(std::clamp(error * armKp, -127.0, 127.0));
+  while (pros::millis() - start < timeoutMs) {
+    if (fabs(target - ArmAngle()) < armTolerance) break;
+    clawArm.move(PIDCalc(armPID, target, ArmAngle()));
     pros::delay(10);
   }
 
   clawArm.move(0);
-  return false;
 }
 
 void ClawArmControl() {
-  double pos = _armPos();
-  bool up = master.get_digital(DIGITAL_L1);
-  bool down = master.get_digital(DIGITAL_L2);
-
-  if (std::isnan(pos)) { // No sensor: manual only, no limits or presets
-    clawArm.move(up == down ? 0 : (up ? 60 : -60));
-    return;
+  if (master.get_digital_new_press(DIGITAL_DOWN)) {
+    armTarget = clawArmTargets[CLAW_ARM_DOWN];
+    armGoingToTarget = true;
+    PIDReset(armPID);
+  }
+  if (master.get_digital_new_press(DIGITAL_LEFT)) {
+    armTarget = clawArmTargets[CLAW_ARM_HIGH];
+    armGoingToTarget = true;
+    PIDReset(armPID);
+  }
+  if (master.get_digital_new_press(DIGITAL_UP)) {
+    armTarget = clawArmTargets[CLAW_ARM_LOW];
+    armGoingToTarget = true;
+    PIDReset(armPID);
   }
 
-  if (master.get_digital_new_press(DIGITAL_DOWN)) armTarget = clawArmTargets[CLAW_ARM_DOWN];
-  if (master.get_digital_new_press(DIGITAL_LEFT)) armTarget = clawArmTargets[CLAW_ARM_HIGH];
-  if (master.get_digital_new_press(DIGITAL_UP)) armTarget = clawArmTargets[CLAW_ARM_LOW];
-
-  double out;
-  if (up != down) {
-    out = up ? 60 : -60; // Up or down moving 90
-    armTarget = std::clamp(pos, armMin, armMax); // Readjust pos
-  } else {
-    double error = armTarget - pos;
-    out = std::fabs(error) <= armTolerance ? 0 : std::clamp(error * armKp, -127.0, 127.0);
+  if (master.get_digital(DIGITAL_L1)) {
+    clawArm.move(60);
+    armGoingToTarget = false;
   }
-
-  if (pos <= armMin && out < 0) out = 0;
-  if (pos >= armMax && out > 0) out = 0;
-
-  clawArm.move(out);
+  else if (master.get_digital(DIGITAL_L2)) {
+    clawArm.move(-60);
+    armGoingToTarget = false;
+  }
+  else if (armGoingToTarget) {
+    if (fabs(armTarget - ArmAngle()) < armTolerance) {
+      clawArm.move(0);
+      armGoingToTarget = false;
+    }
+    else {
+      clawArm.move(PIDCalc(armPID, armTarget, ArmAngle()));
+    }
+  }
+  else {
+    clawArm.move(0); // brake mode is hold, so it stays put
+  }
 }
 
 void ClawControl() {
-    claw.button_toggle(master.get_digital(DIGITAL_X));
+  claw.button_toggle(master.get_digital(DIGITAL_X));
 }
 
 void ClawContract(bool ClawState) {
-    claw.set(ClawState);
+  claw.set(ClawState);
 }

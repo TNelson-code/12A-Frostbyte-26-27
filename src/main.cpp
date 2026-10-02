@@ -26,7 +26,6 @@ void initialize() {
 
   // Configure motors
   clawArm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-  ClawArmInit();
   CascadeInit();
 
   // chassis.odom_tracker_back_set(&horiz_tracker);
@@ -227,6 +226,8 @@ void ez_template_extras() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+void DebugPrint();
+
 void opcontrol() {
   // This is preference to what you like to drive on
   chassis.drive_brake_set(MOTOR_BRAKE_COAST);
@@ -244,6 +245,34 @@ void opcontrol() {
     IntakeControl();                                 // Intake control
     ClawControl();                                   // Claw control
 
+    DebugPrint();                                    // Loop timing and motor health to the terminal
+
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
+}
+
+/**
+ * Prints to the PROS terminal (pros terminal / VS Code "Brain Terminal") 5 times a second:
+ * - loop: worst time between opcontrol loops (should be ~10 ms; much higher means something is blocking)
+ * - arm: raw sensor angle, unwrapped position, and motor current
+ * - L/R: each drive motor's temperature (C) and current (mA). Over-temp or limited motors run slow.
+ */
+void DebugPrint() {
+  static uint32_t last = pros::millis();
+  static uint32_t lastPrint = 0;
+  static uint32_t worstLoop = 0;
+
+  uint32_t now = pros::millis();
+  worstLoop = std::max(worstLoop, now - last);
+  last = now;
+  if (now - lastPrint < 200) return;
+  lastPrint = now;
+
+  printf("loop %lums | arm raw %.1f pos %.1f %dmA | L", (unsigned long)worstLoop,
+         clawRot.get_angle() / 100.0, ArmAngle(), clawArm.get_current_draw());
+  for (auto &m : chassis.left_motors) printf(" %.0fC/%dmA", m.get_temperature(), m.get_current_draw());
+  printf(" | R");
+  for (auto &m : chassis.right_motors) printf(" %.0fC/%dmA", m.get_temperature(), m.get_current_draw());
+  printf("\n");
+  worstLoop = 0;
 }
