@@ -13,6 +13,7 @@ extern double clawArmTargets[CLAW_ARM_STATE_COUNT];
 
 void ClawInit();
 bool ClawArmSyncToSensor();
+double ClawArmPosition();
 void ClawArmMoveToState(ClawArmState state, int timeoutMs = 1000);
 void ClawContract(bool ClawState);
 void ClawArmControl();
