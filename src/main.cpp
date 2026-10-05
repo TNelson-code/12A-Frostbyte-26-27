@@ -271,8 +271,8 @@ void DebugPrint() {
   if (now - lastPrint < 200) return;
   lastPrint = now;
 
-  printf("loop %lums | arm raw %.1f pos %.1f %dmA | L", (unsigned long)worstLoop,
-         clawRot.get_angle() / 100.0, ArmAngle(), clawArm.get_current_draw());
+  printf("loop %lums | arm pos %.1f %dmA | L", (unsigned long)worstLoop,
+         clawArm.get_position(), clawArm.get_current_draw());
   for (auto &m : chassis.left_motors) printf(" %.0fC/%dmA", m.get_temperature(), m.get_current_draw());
   printf(" | R");
   for (auto &m : chassis.right_motors) printf(" %.0fC/%dmA", m.get_temperature(), m.get_current_draw());
@@ -287,7 +287,7 @@ void DebugPrint() {
   // Joysticks: if these move when you push the sticks, the controller is talking to the brain
   printf(" | sticks LY%d RY%d | partner link %d", master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_Y),
          pros::Controller(pros::E_CONTROLLER_PARTNER).is_connected());
-  printf(" | arm %.0fC want %.1f motor pos %.1f -> %.1f", clawArm.get_temperature(), armTarget,
+  printf(" | arm %.0fC pos %.1f -> %.1f", clawArm.get_temperature(),
          clawArm.get_position(), clawArm.get_target_position());
   printf(" | cascade revs %.2f %dmA/%dmA", CascadeRevs(), cascadeLeft.get_current_draw(), cascadeRight.get_current_draw());
   printf("\n");
