@@ -1,7 +1,7 @@
 #include "main.h"
 
 // Arm positions in motor degrees. 0 = arm down.
-double clawArmTargets[CLAW_ARM_STATE_COUNT] = {0, 90, 272}; // down, high, low
+double clawArmTargets[CLAW_ARM_STATE_COUNT] = {0, 350, 272}; // down, high, low
 
 const double CLAW_ARM_RATIO = 3.0; // motor degrees per sensor degree (1:3 gearing)
 static double armOffset = 0;       // motor encoder reading when the arm is down
