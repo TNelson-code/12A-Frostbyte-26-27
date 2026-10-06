@@ -3,6 +3,10 @@
 void default_constants();
 
 
+void red_right_1();
+void red_left_2();
+
+
 void drive_example();
 void turn_example();
 void drive_and_turn();
