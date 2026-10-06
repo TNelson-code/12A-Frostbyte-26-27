@@ -48,6 +48,63 @@ void default_constants() {
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
 }
 
+void red_right_1() {
+  // Center of field is 0, 0. 0 degrees faces other side of field.
+  chassis.odom_pose_set({-60_in, 0_in, -180_deg});
+  // Flip toggle to red
+  chassis.pid_odom_set({-65_in, 0_in, -180_deg}, true);
+  chassis.pid_wait();
+  chassis.pid_odom_set({-60_in, 0_in, -180_deg}, true);
+  chassis.pid_wait();
+  chassis.pid_odom_set({-65_in, 0_in, -180_deg}, true);
+  chassis.pid_wait();
+  chassis.pid_odom_set({-60_in, 0_in, -180_deg}, true);
+  chassis.pid_wait();
+
+  // Score preload
+  chassis.pid_odom_set({-57_in, -20_in, -90_deg}, true);
+  ClawArmMoveToState(CLAW_ARM_LOW, 2000);
+  chassis.pid_wait();
+  ClawContract(false);
+
+  // Drive and get stack
+  chassis.pid_odom_set({-57_in, -10_in, -45_deg}, true);  
+  chassis.pid_wait();
+  chassis.pid_odom_set({-20_in, -20_in, -45_deg}, true);
+  chassis.pid_wait();
+  ClawContract(true);
+  pros::delay(200);
+
+  // Score stack
+  CascadeMoveToState(CASCADE_STATE_1, 2000);
+  chassis.pid_odom_set({-46_in, -24_in, -180_deg}, true);
+  chassis.pid_wait();
+  ClawContract(false);
+
+  
+}
+
+void red_left_2() {
+  chassis.drive_angle_set(0_deg);
+  chassis.odom_xyt_set(72_in, 8_in, 0_deg);
+
+  // Move forward then back to flip toggle
+  ClawArmMoveToState(CLAW_ARM_HIGH, 2000);
+  chassis.pid_drive_set(6.0_in, 127);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-6.5_in, 127);
+  chassis.pid_wait_quick_chain();
+
+  // Move to score preload
+  chassis.pid_odom_set({{88_in, 24_in, 0_deg}, rev, 127}, true);
+  pros::delay(1200);
+  ClawArmMoveToState(CLAW_ARM_DOWN, 2000);
+  ClawContract(false);
+}
+
+
+
+
 ///
 // Drive Example
 ///
@@ -373,42 +430,3 @@ void measure_offsets() {
   if (chassis.odom_tracker_front != nullptr) chassis.odom_tracker_front->distance_to_center_set(f_offset);
 }
 
-// . . .
-// Make your own autonomous functions here!
-// . . .
-
-void red_right_1() {
-  // Center of field is 0, 0. 0 degrees faces other side of field.
-  chassis.odom_pose_set({-60_in, 0_in, -180_deg});
-  // Flip toggle to red
-  chassis.pid_odom_set({-65_in, 0_in, -180_deg}, true);
-  chassis.pid_wait();
-  chassis.pid_odom_set({-60_in, 0_in, -180_deg}, true);
-  chassis.pid_wait();
-  chassis.pid_odom_set({-65_in, 0_in, -180_deg}, true);
-  chassis.pid_wait();
-  chassis.pid_odom_set({-60_in, 0_in, -180_deg}, true);
-  chassis.pid_wait();
-
-  // Score preload
-  chassis.pid_odom_set({-57_in, -20_in, -90_deg}, true);
-  ClawArmMoveToState(CLAW_ARM_LOW, 2000);
-  chassis.pid_wait();
-  ClawContract(false);
-
-  // Drive and get stack
-  chassis.pid_odom_set({-57_in, -10_in, -45_deg}, true);  
-  chassis.pid_wait();
-  chassis.pid_odom_set({-20_in, -20_in, -45_deg}, true);
-  chassis.pid_wait();
-  ClawContract(true);
-  pros::delay(200);
-
-  // Score stack
-  CascadeMoveToState(CASCADE_STATE_1, 2000);
-  chassis.pid_odom_set({-46_in, -24_in, -180_deg}, true);
-  chassis.pid_wait();
-  ClawContract(false);
-
-  
-}
