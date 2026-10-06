@@ -12,7 +12,6 @@ enum ClawArmState { CLAW_ARM_DOWN, CLAW_ARM_HIGH, CLAW_ARM_LOW, CLAW_ARM_STATE_C
 extern double clawArmTargets[CLAW_ARM_STATE_COUNT];
 
 void ClawInit();
-bool ClawArmSyncToSensor();
 double ClawArmPosition();
 void ClawArmMoveToState(ClawArmState state, int timeoutMs = 1000);
 void ClawContract(bool ClawState);
