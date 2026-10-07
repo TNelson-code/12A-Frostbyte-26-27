@@ -35,6 +35,11 @@ void CascadeMove(int speed) {
   cascadeRight.move(speed);
 }
 
+void CascadeMoveRelative(int degrees, int speed) {
+  cascadeLeft.move_relative(degrees, speed);
+  cascadeRight.move_relative(degrees, speed);
+}
+
 // Used in auton
 void CascadeMoveToState(CascadeState state, int timeoutMs) {
   cascadeLeft.move_absolute(cascadeTargets[state] * cascadeRatio, cascadeSpeed);

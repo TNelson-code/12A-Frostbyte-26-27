@@ -15,7 +15,7 @@ const int SWING_SPEED = 110;
 ///
 void default_constants() {
   // P, I, D, and Start I
-  chassis.pid_drive_constants_set(20.0, 0.0, 100.0);         // Fwd/rev constants, used for odom and non odom motions
+  chassis.pid_drive_constants_set(16.0, 0.0, 80.0);         // Fwd/rev constants, used for odom and non odom motions
   chassis.pid_heading_constants_set(11.0, 0.0, 20.0);        // Holds the robot straight while going forward without odom
   chassis.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);     // Turn in place constants
   chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
@@ -50,36 +50,71 @@ void default_constants() {
 
 void red_right_1() {
   // Center of field is 0, 0. 0 degrees faces other side of field.
-  chassis.odom_pose_set({-60_in, 0_in, -180_deg});
+  // ═════ Calibration ══════════════════════════════════════════
+  chassis.pid_odom_behavior_set(ez::shortest);
+  chassis.odom_xyt_set(-66_in, 0_in, -180_deg);
+  ClawContract(true);
+
   // Flip toggle to red
-  chassis.pid_odom_set({-65_in, 0_in, -180_deg}, true);
-  chassis.pid_wait();
-  chassis.pid_odom_set({-60_in, 0_in, -180_deg}, true);
-  chassis.pid_wait();
-  chassis.pid_odom_set({-65_in, 0_in, -180_deg}, true);
-  chassis.pid_wait();
-  chassis.pid_odom_set({-60_in, 0_in, -180_deg}, true);
-  chassis.pid_wait();
+  chassis.pid_drive_set(-6_in, 127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(9_in, 127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(-6_in, 127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(9_in, 127);
+  pros::delay(400);
+  chassis.pid_drive_set(-15.7_in, 50);
+  CascadeMoveRelative(100,127);
+  ClawArmMoveToState(CLAW_ARM_LOW, 2000);
+  clawArm.move_relative(-15, 80);
+  //pros::delay(200);
 
   // Score preload
-  chassis.pid_odom_set({-57_in, -20_in, -90_deg}, true);
-  ClawArmMoveToState(CLAW_ARM_LOW, 2000);
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(11_in, DRIVE_SPEED-50);
+  CascadeMoveRelative(-100,127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(2.5_in, DRIVE_SPEED-80);
   chassis.pid_wait();
   ClawContract(false);
-
-  // Drive and get stack
-  chassis.pid_odom_set({-57_in, -10_in, -45_deg}, true);  
-  chassis.pid_wait();
-  chassis.pid_odom_set({-20_in, -20_in, -45_deg}, true);
-  chassis.pid_wait();
+  pros::delay(500);
+  chassis.pid_turn_set(80_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(-13_in, DRIVE_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_turn_set(116_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(19.4_in, DRIVE_SPEED-50);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(0,127);
+  clawArm.move_relative(15, 80);
+  chassis.pid_turn_set(170_deg, TURN_SPEED);
+  pros::delay(300);
+  chassis.pid_drive_set(-3_in, DRIVE_SPEED);
+  pros::delay(300);
+  chassis.pid_turn_set(150_deg, TURN_SPEED);
+ pros::delay(300);
+  chassis.pid_drive_set(4.4_in, DRIVE_SPEED-30);
+  pros::delay(400);
   ClawContract(true);
-  pros::delay(200);
-
-  // Score stack
-  CascadeMoveToState(CASCADE_STATE_1, 2000);
-  chassis.pid_odom_set({-46_in, -24_in, -180_deg}, true);
-  chassis.pid_wait();
+  CascadeMoveRelative(800, 127);
+  clawArm.move_relative(-15, 80);
+  chassis.pid_turn_set(120_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(-10_in, DRIVE_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_turn_set(62_deg, TURN_SPEED); 
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(5.7_in, DRIVE_SPEED-20);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(-300,127);
+  pros::delay(300);
   ClawContract(false);
+
+
+
 
   
 }
