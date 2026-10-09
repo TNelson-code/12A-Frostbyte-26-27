@@ -46,8 +46,12 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"Red Right 1\n\nRight side auto 1", red_right_1},
-      {"Red Left 2\n\nLeft side auto 2", red_left_2},
+      {"Loader 1\n\nLoader auto 1", loader_1},
+      {"Nonloader 1\n\nNonloader auto 1", nonloader_1},
+      {"Loader 2\n\nLoader auto 2", loader_2},
+      {"Skills Auto V1\n\nSkills auto version 1", skills_auto_V1},
+
+      
       {"Drive\n\nDrive forward and come back", drive_example},
       {"Turn\n\nTurn 3 times.", turn_example},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
