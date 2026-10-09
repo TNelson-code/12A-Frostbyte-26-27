@@ -120,21 +120,53 @@ void red_right_1() {
 }
 
 void red_left_2() {
-  chassis.drive_angle_set(0_deg);
-  chassis.odom_xyt_set(72_in, 8_in, 0_deg);
+  // Center of field is 0, 0. 0 degrees faces other side of field.
+  // ═════ Calibration ══════════════════════════════════════════
+  chassis.pid_odom_behavior_set(ez::shortest);
+  chassis.odom_xyt_set(0_in, -66_in, -90_deg);
+  ClawContract(true);
 
-  // Move forward then back to flip toggle
-  ClawArmMoveToState(CLAW_ARM_HIGH, 2000);
-  chassis.pid_drive_set(6.0_in, 127);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_drive_set(-6.5_in, 127);
-  chassis.pid_wait_quick_chain();
+  // Flip toggle to red
+  chassis.pid_drive_set(-6_in, 127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(9_in, 127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(-6_in, 127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(9_in, 127);
+  pros::delay(400);
+  chassis.pid_drive_set(-14.6_in, 50);
+  CascadeMoveRelative(100,127);
+  ClawArmMoveToState(CLAW_ARM_LOW, 2000);
+  clawArm.move_relative(-15, 80);
 
-  // Move to score preload
-  chassis.pid_odom_set({{88_in, 24_in, 0_deg}, rev, 127}, true);
-  pros::delay(1200);
-  ClawArmMoveToState(CLAW_ARM_DOWN, 2000);
+  // Score preload
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(11_in, DRIVE_SPEED-50);
+  CascadeMoveRelative(-100,127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(2.5_in, DRIVE_SPEED-80);
+  chassis.pid_wait();
   ClawContract(false);
+  pros::delay(500);
+
+  chassis.pid_drive_set(-11.5_in, DRIVE_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+
+  chassis.pid_drive_set(18.5_in, DRIVE_SPEED-50);
+  chassis.pid_wait_quick();
+  ClawContract(true);
+  chassis.pid_drive_set(7_in, DRIVE_SPEED-50);
+  chassis.pid_wait_quick();
+
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(10_in, DRIVE_SPEED);
+  chassis.pid_wait_quick();
+
 }
 
 

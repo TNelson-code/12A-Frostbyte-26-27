@@ -60,7 +60,7 @@ void ClawArmControl() {
 
   if (master.get_digital(DIGITAL_DOWN)) ClawArmMoveTo(CLAW_ARM_DOWN);
   if (master.get_digital(DIGITAL_LEFT)) ClawArmMoveTo(CLAW_ARM_HIGH);
-  if (master.get_digital(DIGITAL_UP))   ClawArmMoveTo(CLAW_ARM_LOW);
+  if (master.get_digital(DIGITAL_RIGHT))   ClawArmMoveTo(CLAW_ARM_LOW);
 
   static bool manual = false; // true while L1/L2 is driving the arm
   if (master.get_digital(DIGITAL_L1))      { clawArm.move(40);  manual = true; clawArmSyncPending = false; }
@@ -69,7 +69,7 @@ void ClawArmControl() {
 }
 
 void ClawControl() {
-  claw.button_toggle(master.get_digital(DIGITAL_X));
+  claw.button_toggle(master.get_digital(DIGITAL_Y));
 }
 
 void ClawContract(bool ClawState) {
