@@ -289,8 +289,8 @@ void DebugPrint() {
   // Joysticks: if these move when you push the sticks, the controller is talking to the brain
   printf(" | sticks LY%d RY%d | partner link %d", master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_Y),
          pros::Controller(pros::E_CONTROLLER_PARTNER).is_connected());
-  printf(" | arm %.0fC pos %.1f (motor %.1f -> %.1f) sensor %.1f", clawArm.get_temperature(), ClawArmPosition(),
-         clawArm.get_position(), clawArm.get_target_position(), clawRot.get_angle() / 100.0);
+  printf(" | arm %.0fC pos %.1f (target %.1f)", clawArm.get_temperature(), ClawArmPosition(),
+         clawArm.get_target_position());
   printf(" | cascade revs %.2f %dmA/%dmA", CascadeRevs(), cascadeLeft.get_current_draw(), cascadeRight.get_current_draw());
   printf("\n");
   worstLoop = 0;

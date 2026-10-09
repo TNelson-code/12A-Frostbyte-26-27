@@ -66,7 +66,7 @@ void red_right_1() {
   pros::delay(400);
   chassis.pid_drive_set(-15.7_in, 50);
   CascadeMoveRelative(100,127);
-  ClawArmMoveToState(CLAW_ARM_LOW, 2000);
+  ClawArmMoveTo(CLAW_ARM_LOW);
   pros::delay(2000);
   clawArm.move_relative(-15, 80);
   //pros::delay(200);
@@ -144,7 +144,7 @@ void red_left_2() {
   pros::delay(400);
   chassis.pid_drive_set(-14.4_in, 50);
   CascadeMoveRelative(100,127);
-  ClawArmMoveToState(CLAW_ARM_LOW, 2000);
+  ClawArmMoveTo(CLAW_ARM_LOW);
   pros::delay(2000);
 
   // Score preload
