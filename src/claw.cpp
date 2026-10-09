@@ -1,9 +1,9 @@
 #include "main.h"
 
 // Arm positions in motor degrees. 0 = arm down.
-double clawArmTargets[CLAW_ARM_STATE_COUNT] = {0, 270, 810}; // down, high, low
+double clawArmTargets[CLAW_ARM_STATE_COUNT] = {0, 270, 820}; // down, high, low
 
-const int CLAW_ARM_SPEED = 80; // rpm for preset moves
+const int CLAW_ARM_SPEED = 127; // rpm for preset moves
 
 void ClawInit() {
   clawArm.set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
