@@ -47,12 +47,24 @@ static void ClawArmCheckSync() {
   }
 }
 
-// Used in auton
+static int clawArmMoveId = 0; // bumped on every auton move so older sync tasks quit
+
+// Used in auton. Starts the move and returns immediately; a background task syncs
+// the encoder once the arm arrives (or after timeoutMs). Add a pros::delay after if you need to wait.
 void ClawArmMoveToState(ClawArmState state, int timeoutMs) {
   ClawArmMoveTo(state);
-  pros::delay(timeoutMs);
-  ClawArmSyncEncoder();
-  clawArmSyncPending = false;
+  int id = ++clawArmMoveId;
+  pros::Task([id, timeoutMs]() {
+    int start = pros::millis();
+    while (clawArmSyncPending && id == clawArmMoveId && pros::millis() - start < timeoutMs) {
+      ClawArmCheckSync();
+      pros::delay(10);
+    }
+    if (clawArmSyncPending && id == clawArmMoveId) { // timed out: sync anyway
+      ClawArmSyncEncoder();
+      clawArmSyncPending = false;
+    }
+  });
 }
 
 void ClawArmControl() {
