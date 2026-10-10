@@ -53,8 +53,8 @@ void CascadeMoveToState(CascadeState state, int timeoutMs) {
 }
 
 void CascadeControl() {
-  if (master.get_digital(DIGITAL_R1))                   CascadeMove(127);
-  else if (master.get_digital(DIGITAL_R2))              CascadeMove(-127);
-  else if (master.get_digital_new_press(DIGITAL_RIGHT)) CascadeMoveRelative(-30, 127);
+  if (master.get_digital(DIGITAL_R1))                   CascadeMove(-127);
+  else if (master.get_digital(DIGITAL_R2))              CascadeMove(127);
+  else if (master.get_digital(DIGITAL_RIGHT)) CascadeMoveAbsolute(0, 127);
   else                                                  CascadeMove(0);
 }
