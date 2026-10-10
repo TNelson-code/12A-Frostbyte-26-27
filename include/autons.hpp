@@ -3,8 +3,10 @@
 void default_constants();
 
 
-void red_right_1();
-void red_left_2();
+void loader_1();
+void loader_2();
+void nonloader_1();
+void skills_auto_V1();
 
 
 void drive_example();
