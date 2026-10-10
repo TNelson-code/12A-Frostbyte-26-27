@@ -16,6 +16,7 @@ extern double cascadeTargets[CASCADE_STATE_COUNT];
 void CascadeMoveToState(CascadeState state, int timeoutMs = 3000);
 void CascadeMove(int speed);
 void CascadeMoveRelative(int degrees, int speed);
+void CascadeMoveAbsolute(int degrees, int speed);
 void CascadeControl();
 void CascadeInit();
 bool CascadeSyncToSensor();

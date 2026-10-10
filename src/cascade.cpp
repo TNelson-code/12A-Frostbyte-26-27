@@ -40,6 +40,11 @@ void CascadeMoveRelative(int degrees, int speed) {
   cascadeRight.move_relative(degrees, speed);
 }
 
+void CascadeMoveAbsolute(int degrees, int speed) {
+  cascadeLeft.move_absolute(degrees, speed);
+  cascadeRight.move_absolute(degrees, speed);
+}
+
 // Used in auton
 void CascadeMoveToState(CascadeState state, int timeoutMs) {
   cascadeLeft.move_absolute(cascadeTargets[state] * cascadeRatio, cascadeSpeed);
@@ -48,7 +53,8 @@ void CascadeMoveToState(CascadeState state, int timeoutMs) {
 }
 
 void CascadeControl() {
-  if (master.get_digital(DIGITAL_R1))      CascadeMove(127);
-  else if (master.get_digital(DIGITAL_R2)) CascadeMove(-127);
-  else                                     CascadeMove(0);
+  if (master.get_digital(DIGITAL_R1))                   CascadeMove(127);
+  else if (master.get_digital(DIGITAL_R2))              CascadeMove(-127);
+  else if (master.get_digital_new_press(DIGITAL_RIGHT)) CascadeMoveRelative(-30, 127);
+  else                                                  CascadeMove(0);
 }
