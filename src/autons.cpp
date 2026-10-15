@@ -73,9 +73,9 @@ void loader_1(){
   // Score preload
   chassis.pid_turn_set(90_deg, TURN_SPEED);
   chassis.pid_wait_quick();
-  clawArm.move_relative(-24, 50);
+  clawArm.move_relative(-28, 50);
   chassis.pid_drive_set(11_in, DRIVE_SPEED-50);
-  CascadeMoveRelative(100,127);
+  CascadeMoveRelative(80,127);
   chassis.pid_wait_quick();
   chassis.pid_drive_set(2.9_in, DRIVE_SPEED-80);
   chassis.pid_wait();
@@ -96,7 +96,7 @@ void loader_1(){
   chassis.pid_wait_quick();
   ClawContract(true);
   CascadeMoveRelative(-500, 127);
-  clawArm.move_relative(-8, 50);
+  clawArm.move_relative(-9, 50);
   chassis.pid_drive_set(6.5_in, DRIVE_SPEED-50);
   chassis.pid_wait_quick();
 
@@ -105,12 +105,12 @@ void loader_1(){
   chassis.pid_wait_quick();
   chassis.pid_drive_set(10_in, DRIVE_SPEED-20);
   chassis.pid_wait_quick();
-  CascadeMoveRelative(200,127);
-  pros::delay(700);
-  ClawContract(false);
-  pros::delay(400);
-  chassis.pid_drive_set(-4_in, DRIVE_SPEED);
-  chassis.pid_wait();
+  CascadeMoveRelative(300,127);
+  // pros::delay(700);
+  // ClawContract(false);
+  // pros::delay(400);
+  // chassis.pid_drive_set(-4_in, DRIVE_SPEED);
+  // chassis.pid_wait();
 }
 
 
