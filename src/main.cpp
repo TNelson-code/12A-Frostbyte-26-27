@@ -253,6 +253,7 @@ void opcontrol() {
     ClawArmControl();                                // Claw arm control 
     IntakeControl();                                 // Intake control
     ClawControl();                                   // Claw control
+    ClawTiltControl();                               // Claw tilt control
 
     DebugPrint();                                    // Loop timing and motor health to the terminal
 

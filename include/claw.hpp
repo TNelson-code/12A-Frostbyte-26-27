@@ -5,6 +5,7 @@
 
 inline pros::Motor clawArm(12);
 inline ez::Piston claw('H');
+inline ez::Piston clawTilt('G');
 
 enum ClawArmState { CLAW_ARM_DOWN, CLAW_ARM_HIGH, CLAW_ARM_LOW, CLAW_ARM_STATE_COUNT };
 
@@ -16,3 +17,5 @@ void ClawArmMoveTo(ClawArmState state);
 void ClawContract(bool ClawState);
 void ClawArmControl();
 void ClawControl();
+void ClawTilt(bool ClawTiltState);
+void ClawTiltControl();
