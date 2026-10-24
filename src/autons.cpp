@@ -199,11 +199,11 @@ void nonloader_1() {
   // Flip toggle to red
   chassis.pid_drive_set(-6_in, 110);
   chassis.pid_wait_quick();
-  chassis.pid_drive_set(9_in, 127);
+  chassis.pid_drive_set(10_in, 127);
   pros::delay(400);
   chassis.pid_drive_set(-6_in, 110);
   chassis.pid_wait_quick();
-  chassis.pid_drive_set(9_in, 127);
+  chassis.pid_drive_set(10_in, 127);
   pros::delay(400);
   chassis.pid_drive_set(-14.9_in, 50);
   CascadeMoveRelative(-100,127);
@@ -211,46 +211,131 @@ void nonloader_1() {
   pros::delay(1500);
 
   // Score preload
-  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_turn_set(0_deg, 100);
   chassis.pid_wait_quick();
-  chassis.pid_drive_set(11_in, DRIVE_SPEED-50);
-  clawArm.move_relative(-18, 50);
+  chassis.pid_drive_set(11_in, 110-50);
   CascadeMoveRelative(100,127);
   chassis.pid_wait_quick();
-  chassis.pid_drive_set(3_in, DRIVE_SPEED-80);
+  chassis.pid_drive_set(2.25_in, 110-80);
   chassis.pid_wait();
+  // ClawTilt(true);
+  pros::delay(200);
   ClawContract(false);
-  pros::delay(500);
+  pros::delay(300);
 
-  // // Move to second stack
-  // chassis.pid_drive_set(-12.5_in, DRIVE_SPEED);
-  // chassis.pid_wait_quick();
-  // chassis.pid_turn_set(46_deg, TURN_SPEED);
-  // chassis.pid_wait_quick();
+  // Move to second stack
+  chassis.pid_drive_set(-11.35_in, DRIVE_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_turn_set(46_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  // ClawTilt(false);
 
-  // // Grab second stack
-  // chassis.pid_drive_set(20_in, DRIVE_SPEED-50);
-  // chassis.pid_wait_quick();
-  // clawArm.move_relative(-2, 50);
-  // chassis.pid_drive_set(4_in, DRIVE_SPEED-90);
-  // chassis.pid_wait_quick();
-  // ClawContract(true);
-  // CascadeMoveRelative(-500, 127);
-  // clawArm.move_relative(-8, 50);
-  // chassis.pid_drive_set(6.5_in, DRIVE_SPEED-50);
-  // chassis.pid_wait_quick();
+  // Grab second stack
+  chassis.pid_drive_set(20_in, DRIVE_SPEED-50);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(4_in, DRIVE_SPEED-90);
+  chassis.pid_wait_quick();
+  ClawContract(true);
+  CascadeMoveRelative(-500, 127);
+  chassis.pid_drive_set(6.5_in, DRIVE_SPEED-50);
+  chassis.pid_wait_quick();
 
-  // // Turn and score second stack
-  // chassis.pid_turn_set(-90_deg, TURN_SPEED);
-  // chassis.pid_wait_quick();
-  // chassis.pid_drive_set(10.5_in, DRIVE_SPEED-20);
-  // chassis.pid_wait_quick();
-  // CascadeMoveRelative(200,127);
+  // Turn and score second stack
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(10_in, DRIVE_SPEED-20);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(200,127);
   // pros::delay(700);
   // ClawContract(false);
   // pros::delay(400);
   // chassis.pid_drive_set(-4_in, DRIVE_SPEED);
   // chassis.pid_wait();
+
+}
+
+void nonloader_2() {
+  // Center of field is 0, 0. 0 degrees faces other side of field.
+  // ═════ Calibration ══════════════════════════════════════════
+  chassis.pid_odom_behavior_set(ez::shortest);
+  chassis.odom_xyt_set(0_in, -66_in, -90_deg);
+  ClawContract(true);
+
+  // Flip toggle to red
+  chassis.pid_drive_set(-6_in, 110);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(10_in, 127);
+  pros::delay(400);
+  chassis.pid_drive_set(-6_in, 110);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(10_in, 127);
+  pros::delay(400);
+  chassis.pid_drive_set(-14.9_in, 50);
+  CascadeMoveRelative(-100,127);
+  ClawArmMoveTo(CLAW_ARM_LOW);
+  pros::delay(1000);
+
+  // Score preload
+  chassis.pid_turn_set(0_deg, 100);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(11_in, 110-50);
+  CascadeMoveRelative(100,127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(2.25_in, 110-80);
+  chassis.pid_wait();
+  // ClawTilt(true);
+  pros::delay(200);
+  ClawContract(false);
+  pros::delay(300);
+
+  // Move to second stack
+  chassis.pid_drive_set(-11.35_in, DRIVE_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_turn_set(46_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  // ClawTilt(false);
+
+  // Grab second stack
+  chassis.pid_drive_set(20_in, DRIVE_SPEED-50);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(4_in, DRIVE_SPEED-90);
+  chassis.pid_wait_quick();
+  ClawContract(true);
+  CascadeMoveRelative(-500, 127);
+  chassis.pid_drive_set(6.5_in, DRIVE_SPEED-50);
+  chassis.pid_wait_quick();
+
+  // Turn and score second stack
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(9.25_in, DRIVE_SPEED-20);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(200,127);
+  pros::delay(500);
+  ClawContract(false);
+  pros::delay(300);
+  chassis.pid_drive_set(-15_in, DRIVE_SPEED);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(300,127);
+
+
+  // Grab third stack
+  chassis.pid_turn_set(-51_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(24.0_in, DRIVE_SPEED-30);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(4_in, DRIVE_SPEED-90);
+  chassis.pid_wait_quick();
+  ClawContract(true);
+  pros::delay(200);
+  chassis.pid_drive_set(5_in, DRIVE_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(-800, 127);
+  chassis.pid_drive_set(10_in, DRIVE_SPEED-50);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(300, 127);
 
 }
 
@@ -325,6 +410,38 @@ void skills_auto_V1(){
   chassis.pid_wait();
   chassis.pid_drive_set(-15_in, DRIVE_SPEED);
   chassis.pid_wait();
+}
+
+void driver_skills_start() {
+  // Center of field is 0, 0. 0 degrees faces other side of field.
+  // ═════ Calibration ══════════════════════════════════════════
+  chassis.pid_odom_behavior_set(ez::shortest);
+  chassis.odom_xyt_set(0_in, -66_in, -90_deg);
+  ClawContract(true);
+
+  // Flip toggle to red
+  chassis.pid_drive_set(-6_in, 110);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(10_in, 127);
+  pros::delay(400);
+  chassis.pid_drive_set(-6_in, 110);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(10_in, 127);
+  pros::delay(400);
+  chassis.pid_drive_set(-14.9_in, 50);
+  CascadeMoveRelative(-100,127);
+  ClawArmMoveTo(CLAW_ARM_LOW);
+  pros::delay(1500);
+
+  // Score preload
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(11_in, DRIVE_SPEED-50);
+  CascadeMoveRelative(100,127);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(2.25_in, DRIVE_SPEED-80);
+  chassis.pid_wait();
+
 }
 
 

@@ -6,7 +6,9 @@ void default_constants();
 void loader_1();
 void loader_2();
 void nonloader_1();
+void nonloader_2();
 void skills_auto_V1();
+void driver_skills_start();
 
 
 void drive_example();

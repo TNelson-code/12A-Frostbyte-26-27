@@ -46,6 +46,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+      {"Nonloader 2\n\nNonloader auto 2", nonloader_2},
       {"Loader 1\n\nLoader auto 1", loader_1},
       {"Nonloader 1\n\nNonloader auto 1", nonloader_1},
       {"Loader 2\n\nLoader auto 2", loader_2},
@@ -240,6 +241,7 @@ void DebugPrint();
 void opcontrol() {
   // This is preference to what you like to drive on
   chassis.drive_brake_set(MOTOR_BRAKE_COAST);
+  ClawContract(false);
 
   while (true) {
     // Gives you some extras to make EZ-Template ezier
@@ -256,6 +258,38 @@ void opcontrol() {
     ClawTiltControl();                               // Claw tilt control
 
     DebugPrint();                                    // Loop timing and motor health to the terminal
+
+
+    // if (master.get_digital(DIGITAL_X)) {
+    //   // Center of field is 0, 0. 0 degrees faces other side of field.
+    //   // ═════ Calibration ══════════════════════════════════════════
+    //   chassis.pid_odom_behavior_set(ez::shortest);
+    //   chassis.odom_xyt_set(0_in, -66_in, -90_deg);
+    //   ClawContract(true);
+
+    //   // Flip toggle to red
+    //   chassis.pid_drive_set(-6_in, 110);
+    //   chassis.pid_wait_quick();
+    //   chassis.pid_drive_set(10_in, 127);
+    //   pros::delay(400);
+    //   chassis.pid_drive_set(-6_in, 110);
+    //   chassis.pid_wait_quick();
+    //   chassis.pid_drive_set(10_in, 127);
+    //   pros::delay(400);
+    //   chassis.pid_drive_set(-14.9_in, 50);
+    //   CascadeMoveRelative(-100,127);
+    //   ClawArmMoveTo(CLAW_ARM_LOW);
+    //   pros::delay(1500);
+
+    //   // Score preload
+    //   chassis.pid_turn_set(180_deg, 100);
+    //   chassis.pid_wait_quick();
+    //   chassis.pid_drive_set(11_in, 110-50);
+    //   CascadeMoveRelative(100,127);
+    //   chassis.pid_wait_quick();
+    //   chassis.pid_drive_set(2.25_in, 110-80);
+    //   chassis.pid_wait();
+    // }
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
