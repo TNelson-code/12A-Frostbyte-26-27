@@ -4,8 +4,8 @@
 #include "api.h"
 
 inline pros::Motor clawArm(12);
-inline ez::Piston claw('H');
-inline ez::Piston clawTilt('G');
+inline ez::Piston claw('G');
+inline ez::Piston clawTilt('H');
 
 enum ClawArmState { CLAW_ARM_DOWN, CLAW_ARM_HIGH, CLAW_ARM_LOW, CLAW_ARM_STATE_COUNT };
 
