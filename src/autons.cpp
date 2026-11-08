@@ -17,7 +17,7 @@ void default_constants() {
   // P, I, D, and Start I
   chassis.pid_drive_constants_set(16.0, 0.0, 80.0);         // Fwd/rev constants, used for odom and non odom motions
   chassis.pid_heading_constants_set(11.0, 0.0, 20.0);        // Holds the robot straight while going forward without odom
-  chassis.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);     // Turn in place constants
+  chassis.pid_turn_constants_set(4, 0.05, 30.0, 15.0);     // Turn in place constants
   chassis.pid_swing_constants_set(6.0, 0.0, 65.0);           // Swing constants
   chassis.pid_odom_angular_constants_set(6.5, 0.0, 52.5);    // Angular control for odom motions
   chassis.pid_odom_boomerang_constants_set(5.8, 0.0, 32.5);  // Angular control for boomerang motions
@@ -281,15 +281,14 @@ void nonloader_2() {
   chassis.pid_drive_set(11_in, 110-50);
   CascadeMoveRelative(100,127);
   chassis.pid_wait_quick();
-  chassis.pid_drive_set(2.25_in, 110-80);
-  chassis.pid_wait();
+  chassis.pid_drive_set(2.75_in, 80);
+  chassis.pid_wait_quick();
   // ClawTilt(true);
-  pros::delay(200);
   ClawContract(false);
   pros::delay(300);
 
   // Move to second stack
-  chassis.pid_drive_set(-11.35_in, DRIVE_SPEED);
+  chassis.pid_drive_set(-12_in, DRIVE_SPEED);
   chassis.pid_wait_quick();
   chassis.pid_turn_set(46_deg, TURN_SPEED);
   chassis.pid_wait_quick();
@@ -301,39 +300,39 @@ void nonloader_2() {
   chassis.pid_drive_set(4_in, DRIVE_SPEED-90);
   chassis.pid_wait_quick();
   ClawContract(true);
-  CascadeMoveRelative(-500, 127);
-  chassis.pid_drive_set(6.5_in, DRIVE_SPEED-50);
+  CascadeMoveRelative(-600, 127);
+  chassis.pid_drive_set(7.5_in, DRIVE_SPEED-50);
   chassis.pid_wait_quick();
 
   // Turn and score second stack
   chassis.pid_turn_set(-90_deg, TURN_SPEED);
   chassis.pid_wait_quick();
-  chassis.pid_drive_set(9.25_in, DRIVE_SPEED-20);
+  chassis.pid_drive_set(12.75_in, DRIVE_SPEED-20);
   chassis.pid_wait_quick();
-  CascadeMoveRelative(200,127);
+  CascadeMoveRelative(300,127);
   pros::delay(500);
   ClawContract(false);
   pros::delay(300);
-  chassis.pid_drive_set(-15_in, DRIVE_SPEED);
+  chassis.pid_drive_set(-20_in, DRIVE_SPEED);
   chassis.pid_wait_quick();
   CascadeMoveRelative(300,127);
 
 
   // Grab third stack
-  chassis.pid_turn_set(-51_deg, TURN_SPEED);
+  chassis.pid_turn_set(-54_deg, TURN_SPEED);
   chassis.pid_wait_quick();
-  chassis.pid_drive_set(24.0_in, DRIVE_SPEED-30);
+  chassis.pid_drive_set(23.0_in, DRIVE_SPEED-30);
   chassis.pid_wait_quick();
-  chassis.pid_drive_set(4_in, DRIVE_SPEED-90);
+  chassis.pid_drive_set(7_in, DRIVE_SPEED-90);
   chassis.pid_wait_quick();
   ClawContract(true);
   pros::delay(200);
-  chassis.pid_drive_set(5_in, DRIVE_SPEED);
+  CascadeMoveRelative(-1000, 127);
+  chassis.pid_drive_set(4_in, DRIVE_SPEED);
   chassis.pid_wait_quick_chain();
   chassis.pid_turn_set(180_deg, TURN_SPEED);
   chassis.pid_wait_quick();
-  CascadeMoveRelative(-800, 127);
-  chassis.pid_drive_set(10_in, DRIVE_SPEED-50);
+  chassis.pid_drive_set(15_in, DRIVE_SPEED-80);
   chassis.pid_wait_quick();
   CascadeMoveRelative(300, 127);
 
