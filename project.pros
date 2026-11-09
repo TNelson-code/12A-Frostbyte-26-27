@@ -424,7 +424,7 @@
       }
     },
     "upload_options": {
-      "description": "Primary code",
+      "description": "Primary",
       "slot": 1,
       "icon": "pros"
     },
