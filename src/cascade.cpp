@@ -56,5 +56,6 @@ void CascadeControl() {
   if (master.get_digital(DIGITAL_R1))                   CascadeMove(-127);
   else if (master.get_digital(DIGITAL_R2))              CascadeMove(127);
   else if (master.get_digital(DIGITAL_RIGHT)) CascadeMoveAbsolute(0, 127);
+  else if (master.get_digital(DIGITAL_DOWN)) CascadeMoveAbsolute(0, 127);
   else                                                  CascadeMove(0);
 }
