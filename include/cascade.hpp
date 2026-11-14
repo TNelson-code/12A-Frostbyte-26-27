@@ -21,3 +21,8 @@ void CascadeControl();
 void CascadeInit();
 bool CascadeSyncToSensor();
 double CascadeRevs();
+
+
+inline ez::Piston togglerLeft('E');
+inline ez::Piston togglerRight('D');
+void TogglerPushControl();

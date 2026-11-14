@@ -8,6 +8,7 @@ void loader_2();
 void nonloader_1();
 void nonloader_2();
 void skills_auto_V1();
+void skills_auto_V2();
 void driver_skills_start();
 
 

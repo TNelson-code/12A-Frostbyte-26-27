@@ -50,7 +50,8 @@ void initialize() {
       {"Loader 1\n\nLoader auto 1", loader_1},
       {"Nonloader 1\n\nNonloader auto 1", nonloader_1},
       {"Loader 2\n\nLoader auto 2", loader_2},
-      {"Skills Auto V1\n\nSkills auto version 1", skills_auto_V1},
+      {"Skills Auto V2\n\nSkills auto w/ 3 pins", skills_auto_V2}, 
+      {"Skills Auto V1\n\nSkills auto w/ 2 pins", skills_auto_V1},
 
       
       {"Drive\n\nDrive forward and come back", drive_example},
@@ -241,7 +242,7 @@ void DebugPrint();
 void opcontrol() {
   // This is preference to what you like to drive on
   chassis.drive_brake_set(MOTOR_BRAKE_COAST);
-  ClawContract(false);
+  ClawContract(false); // Set to true for skills
 
   while (true) {
     // Gives you some extras to make EZ-Template ezier
@@ -256,6 +257,7 @@ void opcontrol() {
     IntakeControl();                                 // Intake control
     ClawControl();                                   // Claw control
     ClawTiltControl();                               // Claw tilt control
+    TogglerPushControl();                            // Toggler push control
 
     DebugPrint();                                    // Loop timing and motor health to the terminal
 

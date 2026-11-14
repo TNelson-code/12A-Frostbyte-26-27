@@ -59,3 +59,16 @@ void CascadeControl() {
   else if (master.get_digital(DIGITAL_DOWN)) CascadeMoveAbsolute(0, 127);
   else                                                  CascadeMove(0);
 }
+
+
+void TogglerPushControl() {
+  if (master.get_digital(DIGITAL_UP)){
+    togglerLeft.set(true);
+    togglerRight.set(true);
+  }
+  else {
+    togglerLeft.set(false);
+    togglerRight.set(false);
+  }
+
+}
