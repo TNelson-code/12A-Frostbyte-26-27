@@ -15,7 +15,7 @@ ez::Drive chassis(
     450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 // ez::tracking_wheel horiz_tracker(8, 2.00, 4.0);  // This tracking wheel is perpendicular to the drive wheels
-ez::tracking_wheel vert_tracker(9, 2.00, 1.0);   // This tracking wheel is parallel to the drive wheels
+ez::tracking_wheel vert_tracker(6, 2.00, 1.0);   // This tracking wheel is parallel to the drive wheels
 
 
 // Runs initialization code. This occurs as soon as the program is started.
@@ -30,7 +30,7 @@ void initialize() {
   ClawInit();
 
   // chassis.odom_tracker_back_set(&horiz_tracker);
-  chassis.odom_tracker_left_set(&vert_tracker);
+  chassis.odom_tracker_right_set(&vert_tracker);
 
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(false);  // Off: curve buttons are LEFT/RIGHT/Y/A, which the arm and intake use. Enables modifying the controller curve with buttons on the joysticks
@@ -46,6 +46,9 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
+
+      {"Nonloader 1 Odom\n\nNonloader auto 1 with odom", nonloader_1_odom},
+
       {"Nonloader 2\n\nNonloader auto 2", nonloader_2},
       {"Loader 1\n\nLoader auto 1", loader_1},
       {"Nonloader 1\n\nNonloader auto 1", nonloader_1},

@@ -34,18 +34,82 @@ void default_constants() {
 
   // Slew constants
   chassis.slew_turn_constants_set(3_deg, 70);
-  chassis.slew_drive_constants_set(3_in, 70);
+  chassis.slew_drive_constants_set(3_in, 60);
   chassis.slew_swing_constants_set(3_in, 80);
 
   // The amount that turns are prioritized over driving in odom motions
   // - if you have tracking wheels, you can run this higher.  1.0 is the max
-  chassis.odom_turn_bias_set(0.9);
+  chassis.odom_turn_bias_set(0.99); //was 0.9
 
-  chassis.odom_look_ahead_set(7_in);           // This is how far ahead in the path the robot looks at
-  chassis.odom_boomerang_distance_set(16_in);  // This sets the maximum distance away from target that the carrot point can be
-  chassis.odom_boomerang_dlead_set(0.625);     // This handles how aggressive the end of boomerang motions are
+  chassis.odom_look_ahead_set(10_in);           // This is how far ahead in the path the robot looks at
+  chassis.odom_boomerang_distance_set(10_in);  // This sets the maximum distance away from target that the carrot point can be
+  chassis.odom_boomerang_dlead_set(0.5);     // This handles how aggressive the end of boomerang motions are
 
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
+}
+
+void nonloader_1_odom(){
+  //Set starting angle + close claw
+  chassis.drive_angle_set(180_deg);
+  chassis.odom_xyt_set(72_in, 8_in, 180_deg);
+  ClawContract(true);
+
+  //Push into toggle twice
+  // chassis.pid_odom_set({{72_in, 14_in}, rev, 127}, true);
+  // chassis.pid_wait_quick();
+  chassis.pid_odom_set({{72_in, 5_in}, fwd, 127}, false);
+  pros::delay(700);
+  chassis.pid_odom_set({{72_in, 12_in}, rev, 127}, true);
+  chassis.pid_wait_quick();
+  chassis.pid_odom_set({{72_in, 6_in}, fwd, 127}, false);
+  pros::delay(700);
+  chassis.odom_xyt_set(72_in, 8_in, 180_deg);
+
+  //Move away from toggle
+  chassis.pid_odom_set({{72_in, 30_in}, rev, 127}, true);
+  CascadeMoveRelative(-100,127);
+  ClawArmMoveTo(CLAW_ARM_LOW);
+  chassis.pid_wait();
+
+  //Turn towards goal and score preload
+  chassis.pid_odom_set({{54_in, 24_in, 270_deg}, fwd, 110}, true);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(90,127);
+  chassis.pid_drive_set(-1_in, 100);
+  chassis.pid_wait();
+  pros::delay(100);
+  ClawContract(false);
+  pros::delay(150);
+  chassis.odom_xyt_set(54_in, 24_in, 270_deg);
+
+  //Move away to second cup and clamp it
+  chassis.pid_odom_set({{72_in, 30_in}, rev, 127}, true);
+  chassis.pid_wait_quick();
+  chassis.pid_odom_set({{55_in, 40.35_in}, fwd, 110}, true);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(4_in, 50);
+  chassis.pid_wait();
+  ClawContract(true);
+  CascadeMoveRelative(-500, 127);
+  clawArm.move_relative(-9, 50);
+
+  //Score second cup
+  chassis.pid_odom_set({{45.25_in, 30_in, 180_deg}, fwd, 110}, true);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(300, 127);
+  pros::delay(350); 
+  ClawContract(false);
+  pros::delay(150); 
+  chassis.odom_xyt_set(48_in, 30_in, 180_deg);
+
+  //Back up and grab third cup
+  chassis.pid_odom_set({{48_in, 48_in}, rev, 127}, true);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(200, 127);
+  chassis.pid_odom_set({{35_in, 30_in}, fwd, 127}, true);
+  chassis.pid_wait_quick();
+  // chassis.pid_drive_set(4_in, 50);
+  // chassis.pid_wait();
 }
 
 void loader_1(){
@@ -162,13 +226,13 @@ void loader_2() {
   chassis.pid_swing_set(ez::LEFT_SWING, 168_deg, 105, 8);
   chassis.pid_wait_quick();
 
-//   // Sweep + grab second stack
-//   chassis.pid_turn_set(170_deg, TURN_SPEED);
-//   pros::delay(300);
+  //   // Sweep + grab second stack
+  //   chassis.pid_turn_set(170_deg, TURN_SPEED);
+  //   pros::delay(300);
   // chassis.pid_drive_set(-3_in, DRIVE_SPEED);
   // pros::delay(300);
-//   chassis.pid_turn_set(150_deg, TURN_SPEED);
-//  pros::delay(300);
+  //   chassis.pid_turn_set(150_deg, TURN_SPEED);
+  //  pros::delay(300);
   chassis.pid_drive_set(4.4_in, 100);
   pros::delay(100);
   ClawContract(true);
