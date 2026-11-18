@@ -48,6 +48,85 @@ void default_constants() {
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
 }
 
+void loader_1_odom(){
+  //Set starting angle + close claw
+  chassis.drive_angle_set(180_deg);
+  chassis.odom_xyt_set(72_in, 8_in, 180_deg);
+  ClawContract(true);
+
+  //Push into toggle twice
+  // chassis.pid_odom_set({{72_in, 14_in}, rev, 127}, true);
+  // chassis.pid_wait_quick();
+  chassis.pid_odom_set({{72_in, 5_in}, fwd, 127}, false);
+  pros::delay(600);
+  chassis.pid_odom_set({{72_in, 12_in}, rev, 127}, true);
+  chassis.pid_wait_quick();
+  chassis.pid_odom_set({{72_in, 6_in}, fwd, 127}, false);
+  pros::delay(600);
+  chassis.odom_xyt_set(72_in, 8_in, 180_deg);
+
+  //Move away from toggle
+  chassis.pid_odom_set({{72_in, 28_in}, rev, 127}, true);
+  CascadeMoveRelative(-100,127);
+  ClawArmMoveTo(CLAW_ARM_LOW);
+  chassis.pid_wait();
+
+  //Turn towards goal and score preload
+  chassis.pid_odom_set({{90_in, 24_in, 90_deg}, fwd, 110}, true);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(90,127);
+  chassis.pid_drive_set(-1_in, 100);
+  chassis.pid_wait();
+  pros::delay(100);
+  ClawContract(false);
+  pros::delay(100);
+  chassis.odom_xyt_set(90_in, 24_in, 90_deg);
+
+  //Move away to second cup and clamp it
+  chassis.pid_drive_set(-4_in, 127);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_odom_set({{72_in, 24_in}, rev, 127}, true);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_odom_set({{87_in, 39.75_in}, fwd, 110}, true);
+  chassis.pid_wait_quick();
+  chassis.pid_drive_set(5.5_in, 40);
+  chassis.pid_wait();
+  ClawContract(true);
+  pros::delay(100);
+  CascadeMoveRelative(-500, 127);
+  clawArm.move_relative(-9, 50);
+
+  //Score second cup
+  chassis.pid_odom_set({{98.5_in, 29_in, 180_deg}, fwd, 110}, true);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(300, 127);
+  pros::delay(350); 
+  ClawContract(false);
+  pros::delay(150); 
+  chassis.odom_xyt_set(96_in, 30_in, 180_deg);
+
+  //Back up and grab third cup
+  chassis.pid_odom_set({{96_in, 48_in}, rev, 127}, true);
+  chassis.pid_wait();
+  CascadeMoveRelative(200, 127);
+  chassis.pid_odom_set({{110.2_in, 28_in}, fwd, 110}, true);
+  chassis.pid_wait();
+  pros::delay(100);
+  chassis.pid_drive_set(5.5_in, 30);
+  chassis.pid_wait();
+  ClawContract(true);
+  pros::delay(100);
+
+  //back up and score third cup
+  chassis.pid_odom_set({{93_in, 48_in}, rev, 127}, true);
+  CascadeMoveRelative(-1000, 127);
+  clawArm.move_relative(-9, 50);
+  chassis.pid_wait_quick();
+  chassis.pid_odom_set({{94.5_in, 29.5_in, 180_deg}, fwd, 100}, true);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(300, 127);
+}
+
 void nonloader_1_odom(){
   //Set starting angle + close claw
   chassis.drive_angle_set(180_deg);
@@ -58,11 +137,11 @@ void nonloader_1_odom(){
   // chassis.pid_odom_set({{72_in, 14_in}, rev, 127}, true);
   // chassis.pid_wait_quick();
   chassis.pid_odom_set({{72_in, 5_in}, fwd, 127}, false);
-  pros::delay(700);
+  pros::delay(600);
   chassis.pid_odom_set({{72_in, 12_in}, rev, 127}, true);
   chassis.pid_wait_quick();
   chassis.pid_odom_set({{72_in, 6_in}, fwd, 127}, false);
-  pros::delay(700);
+  pros::delay(600);
   chassis.odom_xyt_set(72_in, 8_in, 180_deg);
 
   //Move away from toggle
@@ -83,13 +162,16 @@ void nonloader_1_odom(){
   chassis.odom_xyt_set(54_in, 24_in, 270_deg);
 
   //Move away to second cup and clamp it
+  chassis.pid_drive_set(-4_in, 127);
+  chassis.pid_wait_quick_chain();
   chassis.pid_odom_set({{72_in, 30_in}, rev, 127}, true);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_odom_set({{55.2_in, 41_in}, fwd, 110}, true);
   chassis.pid_wait_quick();
-  chassis.pid_odom_set({{55_in, 40.35_in}, fwd, 110}, true);
-  chassis.pid_wait_quick();
-  chassis.pid_drive_set(4_in, 50);
+  chassis.pid_drive_set(5.25_in, 40);
   chassis.pid_wait();
   ClawContract(true);
+  pros::delay(100);
   CascadeMoveRelative(-500, 127);
   clawArm.move_relative(-9, 50);
 
@@ -104,13 +186,26 @@ void nonloader_1_odom(){
 
   //Back up and grab third cup
   chassis.pid_odom_set({{48_in, 48_in}, rev, 127}, true);
-  chassis.pid_wait_quick();
+  chassis.pid_wait();
   CascadeMoveRelative(200, 127);
-  chassis.pid_odom_set({{35_in, 30_in}, fwd, 127}, true);
+  chassis.pid_odom_set({{32.5_in, 28_in}, fwd, 127}, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(2.95_in, 30);
+  chassis.pid_wait();
+  ClawContract(true);
+  pros::delay(100);
+  CascadeMoveRelative(-1000, 127);
+  clawArm.move_relative(-9, 50);
+
+  //back up and score third cup
+  chassis.pid_odom_set({{50_in, 48_in}, rev, 100}, true);
   chassis.pid_wait_quick();
-  // chassis.pid_drive_set(4_in, 50);
-  // chassis.pid_wait();
+  chassis.pid_odom_set({{48.5_in, 29.5_in, 180_deg}, fwd, 100}, true);
+  chassis.pid_wait_quick();
+  CascadeMoveRelative(300, 127);
 }
+
+
 
 void loader_1(){
   // Center of field is 0, 0. 0 degrees faces other side of field.

@@ -2,6 +2,7 @@
 
 void default_constants();
 
+void loader_1_odom();
 void nonloader_1_odom();
 
 void loader_1();

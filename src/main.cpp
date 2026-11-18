@@ -46,7 +46,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-
+      {"Loader 1 Odom\n\nLoader auto 1 with odom", loader_1_odom},
       {"Nonloader 1 Odom\n\nNonloader auto 1 with odom", nonloader_1_odom},
 
       {"Nonloader 2\n\nNonloader auto 2", nonloader_2},
