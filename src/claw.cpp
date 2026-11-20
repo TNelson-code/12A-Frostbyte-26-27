@@ -1,7 +1,7 @@
 #include "main.h"
 
 // Arm positions in motor degrees. 0 = arm down.
-double clawArmTargets[CLAW_ARM_STATE_COUNT] = {0, 505, 810}; // down, high, low
+double clawArmTargets[CLAW_ARM_STATE_COUNT] = {0, 500, 810}; // down, high, low
 
 
 void ClawInit() {
