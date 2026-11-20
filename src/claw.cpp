@@ -20,8 +20,12 @@ void ClawArmMoveTo(ClawArmState state) {
 }
 
 void ClawArmControl() {
-  if (master.get_digital(DIGITAL_DOWN)) ClawArmMoveTo(CLAW_ARM_DOWN);
-  if (master.get_digital(DIGITAL_LEFT)) ClawArmMoveTo(CLAW_ARM_HIGH);
+  if (master.get_digital(DIGITAL_LEFT)) ClawArmMoveTo(CLAW_ARM_DOWN);
+  if (master.get_digital_new_press(DIGITAL_DOWN)) {
+    ClawArmMoveTo(CLAW_ARM_HIGH);
+    pros::delay(400); 
+    clawTilt.set(true);
+  }
   if (master.get_digital(DIGITAL_RIGHT))   ClawArmMoveTo(CLAW_ARM_LOW);
 
   static bool manual = false; // true while L1/L2 is driving the arm
